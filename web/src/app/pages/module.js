@@ -1,6 +1,13 @@
 'use strict';
 
-angular.module('dapoll.pages', ['ui.router.compat', 'dapoll.pages.controllers', 'dapoll.pages.directives'])
+angular.module('dapoll.pages', [
+  'dapoll.pages.controllers',
+  'dapoll.pages.directives',
+  'geolocation',
+  'ui.router.compat'
+]);
+
+angular.module('dapoll.pages')
   .config(function ($stateProvider) {
     $stateProvider
       .state('home', {
