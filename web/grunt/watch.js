@@ -12,7 +12,7 @@ module.exports = {
   },
 
   js: {
-    files: ['<%= paths.client.tld %>/app/{,*/}*.js'],
+    files: ['<%= paths.client.tld %>/app/**/*.js'],
     tasks: [
       'newer:jshint:app',
     ]

@@ -3,7 +3,9 @@
 angular.module('dapoll.pages', [
   'dapoll.pages.controllers',
   'dapoll.pages.directives',
+  'dapoll.pages.services',
   'geolocation',
+  'ngResource',
   'ui.router.compat'
 ]);
 
@@ -22,9 +24,18 @@ angular.module('dapoll.pages')
       .state('polls', {
         url: '/polls',
         templateUrl: 'pages/templates/list.tpl.html',
-        controller: 'HomeCtrl',
+        controller: 'PollsCtrl',
         data: {
           bodyId: 'polls'
+        }
+      })
+
+      .state('poll', {
+        url: '/polls/:id',
+        templateUrl: 'pages/templates/poll.tpl.html',
+        controller: 'PollCtrl',
+        data: {
+          bodyId: 'poll'
         }
       })
 
@@ -41,3 +52,4 @@ angular.module('dapoll.pages')
 
 angular.module('dapoll.pages.controllers', []);
 angular.module('dapoll.pages.directives', []);
+angular.module('dapoll.pages.services', []);

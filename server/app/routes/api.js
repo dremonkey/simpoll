@@ -27,8 +27,8 @@ module.exports = function (server) {
   });
 
   server.post('/api/polls', function (req, res) {
-    var name = req.body.url;
-    var lat = req.body.lon;
+    var name = req.body.name;
+    var lat = req.body.lat;
     var lon = req.body.lon;
 
     var poll = new PollModel({
@@ -47,7 +47,7 @@ module.exports = function (server) {
   server.get('/api/polls/:id', function (req, res) {
     var id = req.params.id;
 
-    PollModel.findOne({_id: id}, function (err, poll) {
+    PollModel.find({_id: id}, null, {limit: 1}, function (err, poll) {
       var data = err && {status: 400, msg: 'Error getting poll'} || poll;
 
       responder(err, data, res);

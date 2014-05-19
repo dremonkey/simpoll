@@ -2,6 +2,11 @@
   <div class="row">
     <div class="col-md-12">
       <h1>List Page</h1>
+      <ul class="list">
+        <li ng-repeat="poll in polls">
+          <a href="/polls/{{poll.code}}">{{poll.name}}</a>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

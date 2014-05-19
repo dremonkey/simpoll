@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('dapoll.pages.controllers')
-  .controller('PollsCtrl', function ($scope, geolocation) {
+
+  .controller('PollCreateCtrl', function ($scope, geolocation, $_polls) {
 
     // ## Local Variables
     var questions = []; // array to hold the poll questions
@@ -21,23 +22,18 @@ angular.module('dapoll.pages.controllers')
       var poll = {};
 
       // Create the Poll
-      poll.name = $scope.polls.name;
+      poll.name = $scope.poll.name;
       poll.lat = $scope.coords.lat;
       poll.lon = $scope.coords.lon;
 
-      // Create each of the questions
+      $_polls.create(poll).then(function (res) {
+        $scope.poll.id = res._id;
+        $scope.poll.code = res.code;
 
-      // Create answers
+        console.log(res);
+        // send to the edit page
+      });
     };
-
-    // ## Parse Body
-    $scope.$watch('polls.body', function (newText, oldText) {
-      // console.log(newText, '\n\n' + oldText);
-
-      if (newText) {
-        pages = newText.split(punctuation.page);
-      }
-    });
 
     // ## Get Location
     geolocation.getLocation().then(function(data){
@@ -49,7 +45,33 @@ angular.module('dapoll.pages.controllers')
     });
 
     // ## Setup Scope Variables
-    $scope.polls = {};
+    $scope.poll = {};
     $scope.coords = {};
     $scope.submit = submit;
+  })
+
+  .controller('PollsCtrl', function ($scope, $_polls) {
+    $_polls.all().then(function (polls) {
+      $scope.polls = polls;
+    });
+
+
+    // ## Setup Scope Variables
+    $scope.polls = [];
+  })
+
+  .controller('PollCtrl', function ($scope, $stateParams) {
+    
+    // ## Parse Body
+    $scope.$watch('poll.body', function (newText, oldText) {
+      // console.log(newText, '\n\n' + oldText);
+
+      if (newText) {
+        pages = newText.split(punctuation.page);
+      }
+    });
+
+    // ## Setup Scope Variables
+    $scope.poll = {};
+    $scope.poll.id = $stateParams.id;
   });
