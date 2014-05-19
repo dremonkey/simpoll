@@ -3,6 +3,7 @@
 module.exports = {
   express: {
     files: [
+      'app/**/*.js',
       'server.js',
       'middleware/**/*.js',
       'models/**/*.js',

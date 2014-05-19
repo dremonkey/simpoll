@@ -1,6 +1,6 @@
 'use strict';
 
-// Module dependencies
+// ## Module dependencies
 var express = require('express')
   , http = require('http');
 
@@ -9,41 +9,29 @@ var Config = require('./config/index.js')
   , middleware = require('./middleware')
   , routes = require('./app/routes');
 
-var config = new Config();
-
-// Sets up the express server instance
-// Instantiates the routes, middleware, and starts the http server
-function init (server) {
-
-  var _config;
-
-  // Retrieve the configuration object
-  _config = config.get();
-
-  // ## Middleware
-  middleware(server, _config);
-
-  // ## Initialize Routes
-  routes.api(server, _config);
-
-  // Forward remaining requests to index
-  server.all('/*', function (req, res) {
-    res.sendfile('index.html', {root: server.get('views')});
-  });
-
-  function startServer () {
-    server.set('port', _config.server.port);
-    http.createServer(server).listen(server.get('port'), function () {
-      log.info('Express server listening on port ' + server.get('port'));
-    });
-  }
-
-  // Start the server
-  startServer();
-}
+var cfg = new Config().getSync();
 
 // Initializes the server
-config.load().then(function () {
-  log.info('Configurations loaded... initializing the server');
-  init(express());
+var server = express();
+
+log.info('Using configurations for ' + process.env.NODE_ENV);
+log.info('Configurations loaded... initializing the server');
+
+// ## Middlesware
+middleware(server, cfg);
+
+// ## Initialize Routes
+routes.api(server, cfg);
+
+// Forward remaining requests to index
+server.all('/*', function (req, res) {
+  res.sendfile('index.html', {root: server.get('views')});
 });
+
+// Start the server
+server.set('port', cfg.server.port);
+http.createServer(server).listen(server.get('port'), function () {
+  log.info('Express server listening on port ' + server.get('port'));
+});
+
+module.exports = server;
