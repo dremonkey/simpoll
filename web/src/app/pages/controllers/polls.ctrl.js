@@ -17,7 +17,7 @@ angular.module('dapoll.pages.controllers')
         console.log(res);
         
         // send to the edit page
-        $state.go('poll', {id: res.code});
+        $state.go('admin.poll', {id: res.code});
 
       });
     };
@@ -108,7 +108,7 @@ angular.module('dapoll.pages.controllers')
     // Delete the poll
     var deletePoll = function () {
       $_polls.remove(code).then(function () {
-        $state.go('polls');
+        $state.go('admin.polls');
       });
     };
 

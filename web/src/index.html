@@ -48,12 +48,10 @@
     <div id="realm">
       <div class="header">
         <div class="container">
-          <div class="navbar-header">
-            <a href="/" class="navbar-brand">DAPOLL</a>
-          </div>
-          <nav class="collapse navbar-collapse" role="navigation">
+          <nav ng-show="isAdmin" class="collapse navbar-collapse" role="navigation">
             <ul class="nav navbar-nav">
-              <li ui-sref-active="active"><a ui-sref="polls">Polls</a></li>
+              <li ui-sref-active="active"><a ui-sref="admin.polls">My Polls</a></li>
+              <li ui-sref-active="active"><a ui-sref="admin.create">New Poll</a></li>
             </ul>
           </nav>
         </div>
@@ -63,7 +61,7 @@
       <div ui-view></div>
     </div>
 
-    <footer class="footer">
+    <footer id="site-footer" class="footer">
       <div class="container">
         <div class="row">
           <div class="col-md-12">

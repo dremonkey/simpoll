@@ -1,0 +1,13 @@
+#polls {
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+
+    li a {
+      font-size: 32px;
+      color: $darkGray;
+    }
+  }
+}

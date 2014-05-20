@@ -38,12 +38,6 @@ body {
     padding: 0.2em 0;
 }
 
-/* Space out content a bit */
-body {
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
 // ## Buttons
 .btn-outline {
   color: $blue;
@@ -67,25 +61,33 @@ body {
   }
 }
 
-/* Custom page header */
 .header {
-    border-bottom: 1px solid $lightGray;
-}
+  padding-top: 20px;
+  padding-bottom: 70px;
+  text-align: center;
+  
+  .navbar-nav {
+    display: inline-block;
+    float: none;
 
-/* Make the masthead heading the same height as the navigation */
-.header h4 {
-    margin-top: 0;
-    margin-bottom: 0;
-    line-height: 40px;
-    padding-bottom: 19px;
+    .active a {
+      border: 1px solid $blue;
+    }
+
+    a:hover {
+      background: none;
+    }
+  }
 }
 
 /* Custom page footer */
-.footer {
-    padding-top: 19px;
-    color: #777;
-    border-top: 1px solid $lightGray;
+.footer .container {
+  padding-top: 19px;
+  color: darken($lightGray, 10%);
+  text-align: center;
 }
 
 // Import App Styling
+@import "partials/edit";
 @import "partials/home";
+@import "partials/list";

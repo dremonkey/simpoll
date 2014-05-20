@@ -2,14 +2,30 @@
   <div class="row">
     <div class="col-md-12">
       <form>
+        
         <div class="form-group">
-          <input type="text" class="name" ng-model="poll.name" val="{{poll.name}}"/>
+          <input 
+            autofocus
+            required
+            type="text"
+            class="name input-lg"
+            ng-model="poll.name" 
+            placeholder="Pick a name for your new poll and hit enter"/>
         </div>
+
         <div class="form-group">
-          <textarea class="questions" ng-model="poll.questions" val="{{poll.body}}"></textarea>
+          <textarea 
+            class="questions"
+            placeholder="You are ready to add your first question. Separate multiple questions using five (5) or more dashes (-) like so -----. When you are done just hit publish to make your poll go live."
+            ng-model="poll.questions" 
+            val="{{poll.body}}">
+          </textarea>
         </div>
-        <button class="btn btn-primary" ng-click="submit()">Publish</button>
-        <button class="btn btn-danger" ng-click="deletePoll()">Delete</button>
+
+        <div class="publish-controls">
+          <button class="btn btn-danger btn-lg" ng-click="deletePoll()">Delete</button>
+          <button class="btn btn-primary btn-lg" ng-click="submit()">Publish</button>
+        </div>
       </form>
     </div>
   </div>

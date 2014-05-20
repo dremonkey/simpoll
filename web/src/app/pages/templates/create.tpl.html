@@ -1,11 +1,16 @@
-<div ng-controller="PollCreateCtrl" class="container">
+<div class="container">
   <div class="row">
     <div class="col-md-12">
-      <form>
+      <form ng-submit="submit()">
         <div class="form-group">
-          <input type="text" class="name" ng-model="poll.name"/>
+          <input 
+            autofocus
+            required
+            type="text"
+            class="name input-lg"
+            ng-model="poll.name" 
+            placeholder="Pick a name for your new poll and hit enter"/>
         </div>
-        <button class="btn btn-primary" ng-click="submit()">Create</button>  
       </form>
     </div>
   </div>

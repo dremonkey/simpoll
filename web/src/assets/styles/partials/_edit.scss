@@ -1,0 +1,72 @@
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+input,
+textarea {
+  display: block;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: center;
+
+  
+  &:-moz-placeholder { color: $placeholderColor }
+  &::-moz-placeholder { color: $placeholderColor }
+  &:-ms-input-placeholder { color: $placeholderColor }
+  &::-webkit-input-placeholder { color: $placeholderColor }
+
+  @include box-shadow(none);
+  @include border-radius(0);
+}
+
+input,
+.input-lg {
+  border-bottom: 2px solid $lightGray;
+}
+
+#create, #edit {
+  .name {
+    height: auto;
+    line-height: 2em;
+    font-size: 24px;
+    text-align: center;
+
+    &:focus {
+      border-color: darken($lightGray, 20%);
+    }
+  }
+}
+
+#create {
+  .name {
+    margin-top: 20%;
+
+    @include transform(translate(0%,-50%));
+  }
+}
+
+#edit {
+  .name {
+    color: $lightGray;
+  }
+
+  .questions {
+    font-size: 32px;
+    min-height: 200px;
+    margin-bottom: 150px;
+  }
+
+  .publish-controls {
+    text-align: center;
+
+    button {
+      margin: 0;
+      
+      @include border-radius(0);
+    }
+  }
+}
