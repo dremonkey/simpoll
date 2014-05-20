@@ -47,8 +47,8 @@
     
     <div id="realm">
       <div class="header">
-        <div class="container">
-          <nav ng-show="isAdmin" class="collapse navbar-collapse" role="navigation">
+        <div class="container" ng-switch="isAdmin">
+          <nav ng-switch-when="true" class="collapse navbar-collapse" role="navigation">
             <ul class="nav navbar-nav">
               <li ui-sref-active="active"><a ui-sref="admin.polls">My Polls</a></li>
               <li ui-sref-active="active"><a ui-sref="admin.create">New Poll</a></li>
@@ -97,6 +97,7 @@
     <script src="app/common/module.js"></script>
     <script src="app/common/services/utils.srv.js"></script>
     <script src="app/common/directives/skrollr.dir.js"></script>
+    <script src="app/common/directives/textarea.dir.js"></script>
 
     <!-- pages module -->
     <script src="app/pages/module.js"></script>

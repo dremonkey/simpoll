@@ -8,7 +8,7 @@ var when = require('when');
 var helpers = require('../helpers');
 
 // ## Models
-var PollModel = require('../../models/poll');
+// var PollModel = require('../../models/poll');
 var QuestionModel = require('../../models/question');
 
 module.exports = function (server) {
@@ -24,6 +24,8 @@ module.exports = function (server) {
       }
 
       var poll = result.poll;
+
+      console.log('/api/polls/:id/questions', poll);
 
       QuestionModel.find({poll_id: poll._id}, function (err, questions) {
         var data = err && {status: 400, msg: 'Error getting questions'} || questions;
@@ -67,7 +69,7 @@ module.exports = function (server) {
           promise = QuestionModel.update({_id: question._id}, upsertData).exec();
           promises.push(promise);
         } else {
-          var promise = QuestionModel.create(upsertData);
+          promise = QuestionModel.create(upsertData);
           promises.push(promise);
         }
       }
@@ -87,8 +89,8 @@ module.exports = function (server) {
 
   server.delete('/api/polls/:id/questions', function (req, res) {
 
-    var code = req.params.id; // poll code
-    var promises = [];
+    // var code = req.params.id; // poll code
+    // var promises = [];
     var questions = req.query.ids; // question ids to delete
     
     questions = Array.isArray(questions) && questions || [questions];

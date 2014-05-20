@@ -1,1 +1,13 @@
-<h1>Poll</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="qa" ng-repeat="qa in qas">
+        <h3 class="question">{{qa.question.content}}</h3>
+
+        <div class="answers">
+          <button ng-repeat="ans in qa.answers" ng-click="vote(ans)">{{ans.content}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

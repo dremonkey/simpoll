@@ -30,6 +30,24 @@ angular.module('dapoll.pages')
         }
       })
 
+      .state('poll', {
+        url: '/polls/:id',
+        templateUrl: 'pages/templates/poll.tpl.html',
+        controller: 'PollVotingCtrl',
+        data: {
+          bodyId: 'poll'
+        }
+      })
+
+      // .state('poll.page', {
+      //   url: '/:page',
+      //   templateUrl: 'pages/templates/poll.tpl.html',
+      //   controller: 'PollVotingCtrl',
+      //   data: {
+      //     bodyId: 'poll'
+      //   }
+      // })           
+
       .state('admin', {
         abstract: true,
         url: '/admin',

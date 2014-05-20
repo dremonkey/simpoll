@@ -37,14 +37,25 @@ angular.module('dapoll.pages.controllers')
     $scope.submit = submit;
   })
 
-  .controller('PollsCtrl', function ($scope, $_polls) {
+  .controller('PollsCtrl', function ($scope, $_polls, $state, geolocation) {
     $_polls.all().then(function (polls) {
       $scope.polls = polls;
+    });
+
+    // ## Get Location
+    geolocation.getLocation().then(function(data){
+      $scope.coords.lat = data.coords.latitude
+      $scope.coords.lon = data.coords.longitude;
+      $scope.coords.acc = data.coords.accuracy;
+
+      console.log('Current Location', $scope.coords);
     });
 
 
     // ## Setup Scope Variables
     $scope.polls = [];
+    $scope.coords = {};
+    $scope.isAdmin = $state.includes('admin');
   })
 
   .controller('PollCtrl', function (_, $scope, $state, $stateParams, $_polls, $_questions) {
@@ -52,9 +63,11 @@ angular.module('dapoll.pages.controllers')
     // ## Local Variables
     var code = $stateParams.id;
     var saved = [];
-    // var questions = []; // array to hold the poll questions
+    
     var punctuation = {
-      page: /-{5,}/gi
+      question: /(.+\?)/gi,
+      page: /-{5,}/gi,
+      answer: /(:{2}(.+)(?=::))|(:{2}(.+))/gi
     };
 
     // Returns a merged array. 
@@ -66,44 +79,97 @@ angular.module('dapoll.pages.controllers')
     // questions. I need to figure out a way to determine which of the original
     // items was deleted. Probably need to set up a watch callback to track
     // changes
-    var merge = function (oldArr, newDataArr) {
+    // var merge = function (oldArr, newDataArr) {
       
-      var merged = []; // array of objects to return
+    //   var merged = []; // array of objects to return
 
-      for (var i = 0; i < newDataArr.length; i++) {
-        merged[i] = oldArr[i] || {};
-        merged[i]['content'] = newDataArr[i];
-      };
+    //   for (var i = 0; i < newDataArr.length; i++) {
+    //     merged[i] = oldArr[i] || {};
+    //     merged[i]['content'] = newDataArr[i];
+    //   };
 
-      return merged;
-    };
+    //   return merged;
+    // };
 
-    var questionsToString = function (questionsArr) {
-      var result = _.map(questionsArr, function (question) {
-        return question.content;
+
+    var parseText = function (text) {
+      var parsed;
+      var pairs = text.split(punctuation.page);
+
+      parsed = _.map(pairs, function (pair) {
+        var question = {content: pair.match(punctuation.question)[0]};
+        var answers = _.map(pair.match(punctuation.answer), function (answer) {
+          return {content: answer.slice(2), display: true};
+        });
+
+        // if there are no answers, default to yes and no but set display to false
+        if (answers.length === 0) {
+          answers.push(
+            {content: 'yes', display: false}, 
+            {content: 'no', display: false}
+          );
+        }
+
+        return {question: question, answers: answers};
       });
 
-      return result.join('----------');
-    }
+      return parsed;
+    };
+
+    var stringifyQAPairs = function (pairs) {
+
+      var result = _.map(pairs, function (pair) {
+        var string = pair.question.content+'\n';
+
+        // add the answers
+        string += _.reduce(pair.answers, function (string, answer) {
+          
+          if (answer.display) {
+            return string + '::' + answer.content;
+          } 
+
+          return '';
+
+        }, '');
+
+        console.log(string);
+        return string;
+      });
+
+      return result.join('\n----------\n');
+    };
 
     // Save the questions
     var submit = function () {
 
       // Parse Questions Text
-      var questions = $scope.poll.questions.split(punctuation.page);
+      // var questions = $scope.poll.qaPairs.split(punctuation.page);
 
+      var parsed = parseText($scope.poll.body);
+
+      
+      // @TODO need to do merging, saving, and deleting
       // merge saved with new questions based on index
-      var merged = merge(saved, questions);
+
+      // var merged = merge(saved, questions);
 
       // at this point anything left in 'saved' needs to be deleted
-      var deleted = saved.splice(merged.length);
+      // var deleted = saved.splice(merged.length);
 
-      $_questions.createOrUpdate(code, merged);
+      // $_questions.createOrUpdate(code, merged);
 
-      if (deleted.length) {
-        $_questions.remove(code, deleted);
+      var data = {
+        name: $scope.poll.name,
+        qaPairs: parsed
       }
+
+      $_polls.update(code, data);
+
+      // if (deleted.length) {
+      //   $_questions.remove(code, deleted);
+      // }
     }
+
 
     // Delete the poll
     var deletePoll = function () {
@@ -112,20 +178,43 @@ angular.module('dapoll.pages.controllers')
       });
     };
 
-    // ## Get existing poll data
+
+    // ## Get existing poll and question/answer pairs
     $_polls.get(code).then(function (res) {
-      console.log('Poll', res);
-      $scope.poll = res[0];
+      $scope.poll.name = res[0].name;
+      $scope.poll.body = stringifyQAPairs(res[0].qaPairs);
     });
 
-    // ## Get existing poll questions
-    $_questions.get(code).then(function (res) {
-      saved = res; // save existing questions
-      $scope.poll.questions = questionsToString(res);
-    });
 
     // ## Setup Scope Variables
     $scope.poll = {};
     $scope.submit = submit;
     $scope.deletePoll = deletePoll;
+  })
+
+  .controller('PollVotingCtrl', function ($scope, $_polls, $stateParams, $_answers) {
+
+    var code = $stateParams.id;
+    
+    // ## Get Question/Answer Pairs
+    $_polls.get(code).then(function (res) {
+      $scope.poll = res[0];
+      $scope.qas = res[0].qaPairs;
+    });
+
+    var vote = function (answer) {
+      var data = {};
+
+      data.pollId = $scope.poll._id;
+      data.answer = answer;
+      
+      $_answers.upVote(data).then(function () {
+        console.log('go to next question');
+      });
+    };
+
+    // ## Setup Scope Variables
+    $scope.qas = {};
+    $scope.poll = {};
+    $scope.vote = vote;
   });

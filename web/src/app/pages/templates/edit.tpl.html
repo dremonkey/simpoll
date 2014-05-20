@@ -5,7 +5,6 @@
         
         <div class="form-group">
           <input 
-            autofocus
             required
             type="text"
             class="name input-lg"
@@ -14,10 +13,11 @@
         </div>
 
         <div class="form-group">
-          <textarea 
+          <textarea
+            autofocus
             class="questions"
-            placeholder="You are ready to add your first question. Separate multiple questions using five (5) or more dashes (-) like so -----. When you are done just hit publish to make your poll go live."
-            ng-model="poll.questions" 
+            placeholder="You are ready to add your first question. End questions with a question mark (?). Separate  question/answer sets using five or more dashes (-----). Designate answer choices with two colons (::). When you are done just hit publish to make your poll go live."
+            ng-model="poll.body" 
             val="{{poll.body}}">
           </textarea>
         </div>

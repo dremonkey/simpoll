@@ -43,5 +43,7 @@ angular.module('dapoll.pages.controllers')
     $rootScope.$on('$stateChangeSuccess', function () {
       $scope.bodyId = getBodyId();
       $scope.bodyClasses = getBodyClasses();
+      $scope.isAdmin = $state.includes('admin');
     });
+    
   });

@@ -2,8 +2,9 @@
   <div class="row">
     <div class="col-md-12">
       <ul class="list">
-        <li ng-repeat="poll in polls">
-          <a ui-sref="admin.poll({id: poll.code})">{{poll.name}}</a>
+        <li ng-repeat="poll in polls" ng-switch="isAdmin">
+          <a ng-switch-when="true" ui-sref="admin.poll({id: poll.code})">{{poll.name}}</a>
+          <a ng-switch-when="false" ui-sref="poll({id: poll.code})">{{poll.name}}</a>
         </li>
       </ul>
     </div>

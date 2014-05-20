@@ -56,8 +56,9 @@ input,
 
   .questions {
     font-size: 32px;
-    min-height: 200px;
-    margin-bottom: 150px;
+    height: auto;
+    min-height: 350px;
+    margin-bottom: 100px;
   }
 
   .publish-controls {
@@ -70,3 +71,32 @@ input,
     }
   }
 }
+
+// For Auto TextArea Resizing
+// .autoResizeTextArea {
+//   height: 100%;
+//   overflow: hidden;
+//   position: absolute;
+//   width: 100%;
+
+//   // box-sizing: border-box;
+//   // -moz-box-sizing: border-box;
+//   // -ms-box-sizing: border-box;
+//   // -webkit-box-sizing: border-box;
+
+//   @include box-sizing(border-box);
+// }
+
+// .autoResizeTextCopy {
+//   padding: 6px;   /* Same border+padding as text area. */
+//   padding-bottom: 1.15em; /* A bit more than one additional line of text. */ 
+//   visibility: hidden;
+//   width: 100%;
+
+//   // box-sizing: border-box;
+//   // -moz-box-sizing: border-box;
+//   // -ms-box-sizing: border-box;
+//   // -webkit-box-sizing: border-box;
+
+//   @include box-sizing(border-box);
+// }

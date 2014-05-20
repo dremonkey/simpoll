@@ -12,7 +12,7 @@ var questions = require('./api/questions');
 // ## Models
 var PollModel = require('../models/poll');
 var QuestionModel = require('../models/question');
-// var AnswerModel = require('../models/answer');
+var AnswerModel = require('../models/answer');
 // var VoteModel = require('../models/vote');
 
 module.exports = function (server) {
@@ -48,17 +48,61 @@ module.exports = function (server) {
   server.get('/api/polls/:id', function (req, res) {
     var code = req.params.id;
 
-    PollModel.find({code: code}, null, {limit: 1}, function (err, poll) {
-      var data = err && {status: 400, msg: 'Error getting poll'} || poll;
+    PollModel.find({code: code}, null, {limit: 1}, function (err, polls) {
+      var poll = polls[0];
+      
+      // var data = err && {status: 400, msg: 'Error getting poll'} || polls;
+      if (!poll) {
+        var data = {status: 400, msg: 'Error getting poll'};
+        helpers.responder(data, data, res);
+        return;
+      }
 
-      helpers.responder(err, data, res);
+      poll.getQAPairs().then(function (pairs) {
+        
+        var data = poll.toObject();
+        data.qaPairs = pairs;
+
+        // always return an array
+        helpers.responder(err, [data], res);
+      });
     });
   });
 
-  server.put('/api/polls/:id', function (req, res) {
-    res.send(200, {});
+  // * Working
+  server.post('/api/polls/:id', function (req, res) {
+    var code = req.params.id;
+    var name = req.body.name;
+    // var lat = req.body.lat;
+    // var lon = req.body.lon;
+    var raw = req.body.raw;
+    var qaPairs = req.body.qaPairs;
+
+    // Update the poll
+    PollModel.find({code: code}, null, {limit: 1}, function (err, polls) {
+      var poll = polls[0];
+
+      // save new data
+      poll.name = name;
+      poll.raw = raw || '';
+      poll.save();
+
+      poll.addQAPairs(qaPairs).then(function (results) {
+
+        // @NOTE 
+        // Results is an array of data objects that were added
+        // as a result of this call. 
+        //
+        // Currently results only contains the last results of the promise chain (the answers)
+        // 
+        // @TODO make results return all results of the promise chain
+        helpers.responder(null, {results: results}, res);
+      });
+    });
   });
 
+
+  // * Working
   server.delete('/api/polls/:id', function (req, res) {
     var code = req.params.id;
 
@@ -82,10 +126,11 @@ module.exports = function (server) {
         console.log('>>>> Deleting poll questions', ids);
 
         helpers.deleteQuestions(ids).then(function () {
+          
           // Delete the poll
           console.log('>>>> Deleting poll');
          
-          poll.remove(function (err, product) {
+          poll.remove(function (err, poll) {
             var data = err && {status: 400, msg: 'Error getting poll'} || poll;
 
             helpers.responder(err, data, res);
@@ -107,7 +152,26 @@ module.exports = function (server) {
   });
 
   server.get('/api/polls/:pId/questions/:qId/answers/:aId', function (req, res) {
-    res.send(200, {});
+    var qId = req.params.qId;
+    var aId = req.params.aId;
+    var qs = req.query;
+
+    if (qs.vote === 'up') {
+      AnswerModel.find({_id: aId}, null, {limit: 1}, function (err, answers) {
+        
+        var answer = answers[0];
+
+        answer.addVote().then(function () {
+          res.send(200, {msg: 'Successful Vote Up'});
+        });
+      });
+    } else if (qs.vote === 'down') {
+      AnswerModel.find({_id: aId}, null, {limit: 1}, function (err, answer) {
+        answer.downVote().then(function () {
+          res.send(200, {msg: 'Successful Vote Down'});
+        });
+      });
+    }
   });
 
 
