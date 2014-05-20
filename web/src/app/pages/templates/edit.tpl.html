@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <form>
+        <div class="form-group">
+          <input type="text" class="name" ng-model="poll.name" val="{{poll.name}}"/>
+        </div>
+        <div class="form-group">
+          <textarea class="questions" ng-model="poll.questions" val="{{poll.body}}"></textarea>
+        </div>
+        <button class="btn btn-primary" ng-click="submit()">Publish</button>
+        <button class="btn btn-danger" ng-click="deletePoll()">Delete</button>
+      </form>
+    </div>
+  </div>
+</div>

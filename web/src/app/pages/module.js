@@ -32,7 +32,7 @@ angular.module('dapoll.pages')
 
       .state('poll', {
         url: '/polls/:id',
-        templateUrl: 'pages/templates/poll.tpl.html',
+        templateUrl: 'pages/templates/edit.tpl.html',
         controller: 'PollCtrl',
         data: {
           bodyId: 'poll'

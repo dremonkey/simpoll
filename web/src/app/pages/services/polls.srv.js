@@ -11,12 +11,16 @@ angular.module('dapoll.pages.services')
       return Polls.get().$promise;
     };
 
-    this.one = function (id) {
-      return Polls.get({id: id}).$promise;
+    this.get = function (code) {
+      return Polls.get({id: code}).$promise;
     };
 
     this.create = function (data) {
       return Polls.save(data).$promise;
+    };
+
+    this.remove = function (code) {
+      return Polls.delete({id: code}).$promise;
     };
 
     return this;

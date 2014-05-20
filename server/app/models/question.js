@@ -8,7 +8,8 @@ var ObjectId = Schema.ObjectId;
 /* jshint camelcase: false */
 var schema = new Schema({
   poll_id: ObjectId,
-  content: String
+  content: String,
+  position: Number
 });
 
 var Model = db.mongoose.model('Question', schema);

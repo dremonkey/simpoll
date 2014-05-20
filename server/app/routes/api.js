@@ -1,18 +1,19 @@
 'use strict';
 
+/* jshint camelcase:false */
+
 // ## Module Dependencies
+var _ = require('lodash');
+// var when = require('when');
+
+var helpers = require('./helpers');
+var questions = require('./api/questions');
+
+// ## Models
 var PollModel = require('../models/poll');
-// var QuestionModel = require('../models/question');
+var QuestionModel = require('../models/question');
 // var AnswerModel = require('../models/answer');
 // var VoteModel = require('../models/vote');
-
-var responder = function (err, data, res) {
-  if (err) {
-    res.send(data.status, {error: data.msg, _raw: err});
-  } else {
-    res.send(200, data);
-  }
-};
 
 module.exports = function (server) {
 
@@ -22,7 +23,7 @@ module.exports = function (server) {
     PollModel.find(function (err, polls) {
       var data = err && {status: 400, msg: 'Error getting polls'} || polls;
       
-      responder(err, data, res);
+      helpers.responder(err, data, res);
     });
   });
 
@@ -40,17 +41,17 @@ module.exports = function (server) {
     poll.save(function (err, poll) {
       var data = err && {status: 400, msg: 'Error saving poll'} || poll;
       
-      responder(err, data, res);
+      helpers.responder(err, data, res);
     });
   });
 
   server.get('/api/polls/:id', function (req, res) {
-    var id = req.params.id;
+    var code = req.params.id;
 
-    PollModel.find({_id: id}, null, {limit: 1}, function (err, poll) {
+    PollModel.find({code: code}, null, {limit: 1}, function (err, poll) {
       var data = err && {status: 400, msg: 'Error getting poll'} || poll;
 
-      responder(err, data, res);
+      helpers.responder(err, data, res);
     });
   });
 
@@ -58,24 +59,45 @@ module.exports = function (server) {
     res.send(200, {});
   });
 
-  server.del('/api/polls/:id', function (req, res) {
-    res.send(200, {});
+  server.delete('/api/polls/:id', function (req, res) {
+    var code = req.params.id;
+
+    helpers.getPoll(code).then(function (result) {
+
+      if (result.err) {
+        helpers.responder(result.err, result.data, res);
+        return;
+      }
+
+      var poll = result.poll;
+
+      console.log('Preparing to delete poll', poll);
+
+      QuestionModel.find({poll_id: poll._id}, function (err, questions) {
+        
+        var ids = _.map(questions, function (question) {
+          return question._id;
+        });
+
+        console.log('>>>> Deleting poll questions', ids);
+
+        helpers.deleteQuestions(ids).then(function () {
+          // Delete the poll
+          console.log('>>>> Deleting poll');
+         
+          poll.remove(function (err, product) {
+            var data = err && {status: 400, msg: 'Error getting poll'} || poll;
+
+            helpers.responder(err, data, res);
+          });
+        });
+      });
+    });
   });
 
 
   // ## Questions API
-
-  server.get('/api/polls/:id/questions', function (req, res) {
-    res.send(200, {});
-  });
-
-  server.post('/api/polls/:id', function (req, res) {
-    res.send(200, {});
-  });
-
-  server.get('/api/polls/:pId/questions/:qId', function (req, res) {
-    res.send(200, {});
-  });
+  questions(server);
 
 
   // ## Answers API
