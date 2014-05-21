@@ -5,7 +5,12 @@
         <h3 class="question">{{qa.question.content}}</h3>
 
         <div class="answers">
-          <button ng-repeat="ans in qa.answers" ng-click="vote(ans)">{{ans.content}}</button>
+          <button 
+            class="btn btn-primary"
+            ng-repeat="ans in qa.answers" 
+            ng-click="vote(ans)">
+            {{ans.content}}
+          </button>
         </div>
       </div>
     </div>

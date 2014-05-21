@@ -1,0 +1,15 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="qa result" ng-repeat="qa in qas">
+        <div class="legend">
+          <h3 class="question">{{qa.question.content}}</h3>
+          <div ng-repeat="ans in qa.answers">
+            <p>{{ans.content}} | {{ans.votes}}</p>
+          </div>
+        </div>
+        <div d3-donut data="qa.answers"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var db = require('../db');
 var when = require('when');
 

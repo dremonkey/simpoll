@@ -2,12 +2,14 @@
 
 // ## Module dependencies
 var express = require('express')
-  , http = require('http');
+  , http = require('http')
+  , io = require('socket.io');
 
 var Config = require('./config/index.js')
   , log = require('./utils/logger')
   , middleware = require('./middleware')
-  , routes = require('./app/routes');
+  , routes = require('./app/routes')
+  , sockets = require('./sockets');
 
 var cfg = new Config().getSync();
 
@@ -30,8 +32,13 @@ server.all('/*', function (req, res) {
 
 // Start the server
 server.set('port', cfg.server.port);
-http.createServer(server).listen(server.get('port'), function () {
+var instance = http.createServer(server).listen(server.get('port'), function () {
   log.info('Express server listening on port ' + server.get('port'));
 });
+
+// Hook up Socket
+io = io.listen(instance);
+sockets(io);
+server.io = io;
 
 module.exports = server;

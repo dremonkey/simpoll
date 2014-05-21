@@ -217,4 +217,36 @@ angular.module('dapoll.pages.controllers')
     $scope.qas = {};
     $scope.poll = {};
     $scope.vote = vote;
-  });
+  })
+
+  .controller('PollResultsCtrl', function (_, $scope, $_polls, $stateParams, $_socketio) {
+
+    var code = $stateParams.id;
+    
+    // ## Get Question/Answer Pairs
+    $_polls.get(code).then(function (res) {
+      $scope.poll = res[0];
+      $scope.qas = res[0].qaPairs;
+    });
+
+    $_socketio.on('vote:change', function (data) {
+      var answer = data.answer; // updated answer data
+
+      // update scope
+      _.each($scope.qas, function (qa) {
+        if (qa.question._id === answer.question_id) {
+          _.each(qa.answers, function (ans, index) {
+            if (ans._id === answer._id) {
+              qa.answers[index] = answer;
+            }
+          });
+        }
+      });
+
+      $scope.$digest();
+    });
+
+    // ## Setup Scope Variables
+    $scope.qas = {};
+    $scope.poll = {};
+  });;

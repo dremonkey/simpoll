@@ -39,6 +39,16 @@ angular.module('dapoll.pages')
         }
       })
 
+      .state('results', {
+        url: '/polls/:id/results',
+        templateUrl: 'pages/templates/results.tpl.html',
+        controller: 'PollResultsCtrl',
+        data: {
+          bodyId: 'poll',
+          // bodyClasses: ['results']
+        }
+      })
+
       // .state('poll.page', {
       //   url: '/:page',
       //   templateUrl: 'pages/templates/poll.tpl.html',

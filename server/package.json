@@ -9,6 +9,7 @@
     "lodash": "~2.4.1",
     "mongoose": "^3.8.9",
     "send": "~0.1.4",
+    "socket.io": "^0.9.16",
     "when": "~2.7.0"
   },
   "devDependencies": {

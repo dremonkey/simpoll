@@ -33,6 +33,8 @@
     <!-- build:css(.tmp) styles/app.main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+
+    <script src="/socket.io/socket.io.js"></script>
   </head>
   <body ng-app="dapoll" ng-controller="BaseCtrl" id="{{bodyId}}">
 
@@ -87,6 +89,7 @@
     <script src="components/ng-Fx/dist/ng-Fx.js"></script>
     <script src="components/restangular/dist/restangular.min.js"></script>
     <script src="components/angularjs-geolocation/src/geolocation.js"></script>
+    <script src="components/d3/d3.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -97,7 +100,7 @@
     <script src="app/common/module.js"></script>
     <script src="app/common/services/utils.srv.js"></script>
     <script src="app/common/directives/skrollr.dir.js"></script>
-    <script src="app/common/directives/textarea.dir.js"></script>
+    <script src="app/common/directives/d3donut.dir.js"></script>
 
     <!-- pages module -->
     <script src="app/pages/module.js"></script>
@@ -111,6 +114,7 @@
     <script src="app/pages/services/polls.srv.js"></script>
     <script src="app/pages/services/questions.srv.js"></script>
     <script src="app/pages/services/votes.srv.js"></script>
+    <script src="app/pages/services/socket.srv.js"></script>
     <!-- endbuild -->
 
     <script src="scripts/app.templates.js"></script>

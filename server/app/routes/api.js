@@ -152,7 +152,7 @@ module.exports = function (server) {
   });
 
   server.get('/api/polls/:pId/questions/:qId/answers/:aId', function (req, res) {
-    var qId = req.params.qId;
+    // var qId = req.params.qId;
     var aId = req.params.aId;
     var qs = req.query;
 

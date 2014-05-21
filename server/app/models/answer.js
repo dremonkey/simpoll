@@ -16,11 +16,16 @@ var schema = new Schema({
 });
 
 schema.methods.addVote = function () {
+  
+  var io = require('../../server').io;
   var that = this;
-
+  
   // Increment vote property
   this.votes++;
   this.save();
+
+  // Broadcast
+  io.sockets.emit('vote:change', {answer: that});
 
   // Create new vote
   return VoteModel.create({
